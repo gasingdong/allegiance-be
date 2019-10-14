@@ -2,7 +2,7 @@
 const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
-const compression = require('compression')
+const compression = require("compression");
 
 // Server instance
 const server = express();
@@ -44,7 +44,7 @@ server.use("/api/feed", authenticate, feedRouter);
 
 // sanity check
 server.get("/", (req, res) => {
-	res.send("Welcome to Allegiance!");
+  res.send("Welcome to Allegiance!");
 });
 
 // async error handling. must come AFTER API routes or will raise TypeError
