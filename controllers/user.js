@@ -5,6 +5,7 @@ const Users = require("../models/users");
 const router = express.Router();
 
 const validation = require("../middleware/dataValidation");
+const userValidation = require("../middleware/user-middleware");
 const Notifications = require("../models/notifications");
 
 const { userSchema } = require("../schemas");
@@ -51,31 +52,22 @@ router
 
 router
   .router("/:id/notifications")
+  .all(userValidation.validateUserId)
   .get(async (req, res) => {
     const { id } = req.params;
-    const user = await Users.find({ id }).first();
-    if (user && user.id) {
-      const notifications = await Notifications.getNotificationsByUserId(id);
-      res.status(200).json(notifications);
-    } else {
-      res.status(404).json({ message: "That user does not exist." });
-    }
+    const notifications = await Notifications.findByUserId(id);
+    res.status(200).json(notifications);
   })
   .post(async (req, res) => {
     const { id } = req.params;
     const { invoker_id, type_id, type } = req.body;
-    const user = await Users.find({ id }).first();
-    if (user && user.id) {
-      const postNotification = await Notifications.addNotificationToUser(
-        id,
-        invoker_id,
-        type_id,
-        type
-      );
-      res.status(201).json(postNotification);
-    } else {
-      res.status(404).json({ message: "That user does not exist." });
-    }
+    const postNotification = await Notifications.addToUser(
+      id,
+      invoker_id,
+      type_id,
+      type
+    );
+    res.status(201).json(postNotification);
   });
 
 module.exports = router;
