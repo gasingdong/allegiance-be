@@ -51,7 +51,7 @@ router
   });
 
 router
-  .router("/:id/notifications")
+  .route("/:id/notifications")
   .all(userValidation.validateUserId)
   .get(async (req, res) => {
     const { id } = req.params;

@@ -7,7 +7,7 @@ module.exports = {
 
 function findByUserId(user_id) {
   return db("notifications")
-    .join("users", "id", "invoker_id")
+    .join("users", "users.id", "invoker_id")
     .where({ user_id });
 }
 

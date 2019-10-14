@@ -30,6 +30,8 @@ exports.up = function(knex) {
     notifications.boolean("read").default(false);
 
     notifications.timestamps(true, true);
+
+    notifications.unique(["invoker_id", "type_id", "type"]);
   });
 };
 
