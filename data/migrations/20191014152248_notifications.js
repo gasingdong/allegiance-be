@@ -31,7 +31,7 @@ exports.up = function(knex) {
 
     notifications.timestamps(true, true);
 
-    notifications.unique(["invoker_id", "type_id", "type"]);
+    // notifications.unique(["invoker_id", "type_id", "type"]);
   });
 };
 
