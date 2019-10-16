@@ -1,60 +1,60 @@
 // Update with your config settings.
-require("dotenv").config();
+require('dotenv').config()
 
 module.exports = {
   development: {
-    client: "postgresql",
-    connection: {
+    client: 'postgresql',
+    connection: process.env.DB_LOCAL_URL || {
       database: process.env.DB_LOCAL,
       user: process.env.DB_LOCAL_USER,
-      password: process.env.DB_LOCAL_PASSWORD
+      password: process.env.DB_LOCAL_PASSWORD,
     },
     pool: {
       min: 2,
-      max: 10
+      max: 10,
     },
     migrations: {
-      directory: "./data/migrations"
+      directory: './data/migrations',
     },
     seeds: {
-      directory: "./data/seeds"
+      directory: './data/seeds',
     },
-    useNullAsDefault: true
+    useNullAsDefault: true,
   },
 
   testing: {
-    client: "postgresql",
+    client: 'postgresql',
     connection: {
       database: process.env.DB_TEST,
       user: process.env.DB_TEST_USER,
-      password: process.env.DB_TEST_PASSWORD
+      password: process.env.DB_TEST_PASSWORD,
     },
     pool: {
       min: 2,
-      max: 10
+      max: 10,
     },
     migrations: {
-      directory: "./data/migrations"
+      directory: './data/migrations',
     },
     seeds: {
-      directory: "./data/seeds"
+      directory: './data/seeds',
     },
-    useNullAsDefault: true
+    useNullAsDefault: true,
   },
 
   production: {
-    client: "postgresql",
+    client: 'postgresql',
     connection: process.env.DATABASE_URL || {
       database: process.env.DB,
       user: process.env.DB_USER,
-      password: process.env.DB_PASSWORD
+      password: process.env.DB_PASSWORD,
     },
     migrations: {
-      directory: "./data/migrations"
+      directory: './data/migrations',
     },
     seeds: {
-      directory: "./data/seeds"
+      directory: './data/seeds',
     },
-    useNullAsDefault: true
-  }
-};
+    useNullAsDefault: true,
+  },
+}
