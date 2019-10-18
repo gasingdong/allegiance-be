@@ -87,7 +87,6 @@ router
     const { id } = req.params
     const deleted = await PostsLikes.remove({ id })
     if (deleted) {
-      console.log('what is deletedddd? d🤡', deleted)
       res.status(200).json({
         deleted,
       })
