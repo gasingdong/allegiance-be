@@ -9,6 +9,11 @@ const server = express();
 
 // Library Middleware
 server.use(cors(), helmet(), express.json(), compression());
+
+// const listening = server.listen(5000, () => {
+//   console.log("listening");
+// });
+
 const authenticate = require("../middleware/auth-middleware");
 
 // Routers
@@ -24,7 +29,7 @@ const postsLikesRouter = require("../controllers/post_like");
 const repliesRouter = require("../controllers/reply");
 const repliesLikesRouter = require("../controllers/reply_like");
 const feedRouter = require("../controllers/feed");
-const notificationsRouter = require('../controllers/notification');
+const notificationsRouter = require("../controllers/notification");
 
 // Internal middleware
 const errorHandler = require("../middleware/errorHandling");
