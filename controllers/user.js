@@ -54,20 +54,28 @@ router
   .route("/:id/notifications")
   .all(userValidation.validateUserId)
   .get(async (req, res) => {
-    const { id } = req.params;
-    const notifications = await Notifications.findByUserId(id);
-    res.status(200).json(notifications);
+    try {
+      const { id } = req.params;
+      const notifications = await Notifications.findByUserId(id);
+      res.status(200).json(notifications);
+    } catch (err) {
+      res.status(500).json({ err });
+    }
   })
   .post(async (req, res) => {
-    const { id } = req.params;
-    const { invoker_id, type_id, type } = req.body;
-    const postNotification = await Notifications.addToUser(
-      id,
-      invoker_id,
-      type_id,
-      type
-    );
-    res.status(201).json(postNotification);
+    try {
+      const { id } = req.params;
+      const { invoker_id, type_id, type } = req.body;
+      const postNotification = await Notifications.addToUser(
+        id,
+        invoker_id,
+        type_id,
+        type
+      );
+      res.status(201).json(postNotification);
+    } catch (err) {
+      res.status(500).json({ err });
+    }
   });
 
 module.exports = router;
