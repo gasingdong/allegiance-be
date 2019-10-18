@@ -4,7 +4,9 @@ const Posts = require("../models/posts");
 
 module.exports = {
   findByUserId,
-  addToUser
+  addToUser,
+  remove,
+  find
 };
 
 async function findByUserId(user_id) {
@@ -44,4 +46,12 @@ function addToUser(user_id, invoker_id, type_id, type) {
     type_id,
     type
   });
+}
+
+function find(id) {
+  return db('notifications').where({ id }).first();
+}
+
+function remove(id) {
+  return db('notifications').where({ id }).del();
 }

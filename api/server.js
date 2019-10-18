@@ -24,6 +24,7 @@ const postsLikesRouter = require("../controllers/post_like");
 const repliesRouter = require("../controllers/reply");
 const repliesLikesRouter = require("../controllers/reply_like");
 const feedRouter = require("../controllers/feed");
+const notificationsRouter = require('../controllers/notification');
 
 // Internal middleware
 const errorHandler = require("../middleware/errorHandling");
@@ -41,6 +42,7 @@ server.use("/api/posts_likes", authenticate, postsLikesRouter);
 server.use("/api/replies", authenticate, repliesRouter);
 server.use("/api/replies_likes", authenticate, repliesLikesRouter);
 server.use("/api/feed", authenticate, feedRouter);
+server.use("/api/notifications", authenticate, notificationsRouter);
 
 // sanity check
 server.get("/", (req, res) => {
