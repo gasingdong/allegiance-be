@@ -9,12 +9,7 @@ const server = express()
 
 // Library Middleware
 server.use(cors(), helmet(), express.json(), compression())
-
-// const listening = server.listen(5000, () => {
-//   console.log("listening");
-// });
-
-// cons = require("../middleware/auth-middleware");
+const authenticate = require('../middleware/auth-middleware')
 
 // Routers
 const usersRouter = require('../controllers/user')
@@ -35,19 +30,19 @@ const notificationsRouter = require('../controllers/notification')
 const errorHandler = require('../middleware/errorHandling')
 
 // API endpoints
-server.use('/api/users', usersRouter)
+server.use('/api/users', authenticate, usersRouter)
 server.use('/api/auth', authRouter)
-server.use('/api/allegiances', allegiancesRouter)
-server.use('/api/users_allegiances', usersAllegiancesRouter)
-server.use('/api/groups', groupsRouter)
-server.use('/api/groups_users', groupsUsersRouter)
-server.use('/api/groups_allegiances', groupsAllegiancesRouter)
-server.use('/api/posts', postsRouter)
-server.use('/api/posts_likes', postsLikesRouter)
-server.use('/api/replies', repliesRouter)
-server.use('/api/replies_likes', repliesLikesRouter)
-server.use('/api/feed', feedRouter)
-server.use('/api/notifications', notificationsRouter)
+server.use('/api/allegiances', authenticate, allegiancesRouter)
+server.use('/api/users_allegiances', authenticate, usersAllegiancesRouter)
+server.use('/api/groups', authenticate, groupsRouter)
+server.use('/api/groups_users', authenticate, groupsUsersRouter)
+server.use('/api/groups_allegiances', authenticate, groupsAllegiancesRouter)
+server.use('/api/posts', authenticate, postsRouter)
+server.use('/api/posts_likes', authenticate, postsLikesRouter)
+server.use('/api/replies', authenticate, repliesRouter)
+server.use('/api/replies_likes', authenticate, repliesLikesRouter)
+server.use('/api/feed', authenticate, feedRouter)
+server.use('/api/notifications', authenticate, notificationsRouter)
 
 // sanity check
 server.get('/', (req, res) => {
