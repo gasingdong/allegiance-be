@@ -69,5 +69,6 @@ function find(id) {
 function remove(id) {
   return db("notifications")
     .where({ id })
-    .del();
+    .del()
+    .returning("*");
 }
