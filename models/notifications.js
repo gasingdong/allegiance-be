@@ -28,27 +28,31 @@ async function findByUserId(user_id) {
       "n.id"
     );
 
-  return Promise.all(
-    results.map(async note => {
+  return results.reduce(async (prev, note) => {
       try {
+        const acc = await prev;
         if (note.type === "reply_like") {
           const reply = await Replies.find({ "r.id": note.type_id }).first();
-          return {
-            ...note,
-            reply_content: reply.reply_content
-          };
+          if(reply) {
+            acc.push({
+              ...note,
+              reply_content: reply.reply_content
+            });
+          }
         } else {
           const post = await Posts.find({ "p.id": note.type_id }).first();
-          return {
+          if(post){
+            acc.push({
             ...note,
             post_content: post.post_content
-          };
+            });
+          }
         }
+        return acc;
       } catch (err) {
         console.log(err);
       }
-    })
-  );
+    }, Promise.resolve([]));
 }
 
 function addToUser(user_id, invoker_id, type_id, type) {
