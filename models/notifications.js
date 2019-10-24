@@ -2,6 +2,7 @@ const db = require("../data/db-config");
 
 const Posts = require("../models/posts");
 const Replies = require("../models/replies");
+const Groups = require("../models/groups");
 
 module.exports = {
   findByUserId,
@@ -29,30 +30,38 @@ async function findByUserId(user_id) {
     );
 
   return results.reduce(async (prev, note) => {
-      try {
-        const acc = await prev;
-        if (note.type === "reply_like") {
-          const reply = await Replies.find({ "r.id": note.type_id }).first();
-          if(reply) {
-            acc.push({
-              ...note,
-              reply_content: reply.reply_content
-            });
-          }
-        } else {
-          const post = await Posts.find({ "p.id": note.type_id }).first();
-          if(post){
-            acc.push({
+    try {
+      const acc = await prev;
+      if (note.type === "reply_like") {
+        const reply = await Replies.find({ "r.id": note.type_id }).first();
+        if (reply) {
+          acc.push({
             ...note,
-            post_content: post.post_content
-            });
-          }
+            content: reply.reply_content
+          });
         }
-        return acc;
-      } catch (err) {
-        console.log(err);
+      } else if (note.type === "like" || note.type === "reply") {
+        const post = await Posts.find({ "p.id": note.type_id }).first();
+        if (post) {
+          acc.push({
+            ...note,
+            content: post.post_content
+          });
+        }
+      } else if (note.type === "group_invite") {
+        const group = await Groups.find({ id: note.type_id }).first();
+        if (group) {
+          acc.push({
+            ...note,
+            content: group.group_name
+          });
+        }
       }
-    }, Promise.resolve([]));
+      return acc;
+    } catch (err) {
+      console.log(err);
+    }
+  }, Promise.resolve([]));
 }
 
 function addToUser(user_id, invoker_id, type_id, type) {
