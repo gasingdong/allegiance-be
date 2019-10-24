@@ -208,9 +208,10 @@ router
   })
   .post(async (req, res) => {
     try {
-      const { user_id } = req.body;
+      const { email, sender_id } = req.body;
       const { id } = req.params;
-      const invitedUser = await Invitees.addInvitation(id, user_id);
+      const user_id = (await Users.find({ email }).first()).id;
+      const invitedUser = await Invitees.addInvitation(id, user_id, sender_id);
       res.status(201).json(invitedUser);
     } catch (err) {
       console.log(err);
@@ -218,10 +219,10 @@ router
     }
   });
 
-router.route("/:id/invitees/:userId").delete(async (req, res) => {
+router.route("/:id/invitees/:userId/:senderId").delete(async (req, res) => {
   try {
-    const { id, userId } = req.params;
-    const deletedInvite = await Invitees.deleteInvitation(id, userId);
+    const { id, userId, senderId } = req.params;
+    const deletedInvite = await Invitees.deleteInvitation(id, userId, senderId);
     res.status(200).json(deletedInvite);
   } catch (err) {
     console.log(err);

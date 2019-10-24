@@ -18,13 +18,13 @@ function findByGroupId(group_id) {
     .select("u.email", "u.username");
 }
 
-function addInvitation(group_id, user_id) {
-  return db("group_invitees").insert({ group_id, user_id });
+function addInvitation(group_id, user_id, sender_id) {
+  return db("group_invitees").insert({ group_id, user_id, sender_id });
 }
 
-function deleteInvitation(group_id, user_id) {
+function deleteInvitation(group_id, user_id, sender_id) {
   return db("group_invitees")
-    .where({ group_id, user_id })
+    .where({ group_id, user_id, sender_id })
     .del()
     .returning("*");
 }
