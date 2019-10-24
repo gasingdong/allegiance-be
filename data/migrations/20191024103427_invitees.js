@@ -17,6 +17,7 @@ exports.up = function(knex) {
       .onDelete("CASCADE")
       .onUpdate("CASCADE");
     invitees.unique(["user_id", "group_id"]);
+    invitees.timestamps(true, true);
   });
 };
 
