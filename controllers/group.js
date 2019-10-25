@@ -210,9 +210,19 @@ router
     try {
       const { email, sender_id } = req.body;
       const { id } = req.params;
-      const user_id = (await Users.find({ email }).first()).id;
-      const invitedUser = await Invitees.addInvitation(id, user_id, sender_id);
-      res.status(201).json(invitedUser);
+      const emailedUser = await Users.find({ email }).first();
+
+      if (emailedUser) {
+        const user_id = emailedUser.id;
+        const invitedUser = await Invitees.addInvitation(
+          id,
+          user_id,
+          sender_id
+        );
+        res.status(201).json(invitedUser);
+      } else {
+        res.status(400).json({ message: "That is not a valid email." });
+      }
     } catch (err) {
       console.log(err);
       res.status(500).json({ err });

@@ -19,7 +19,9 @@ function findByGroupId(group_id) {
 }
 
 function addInvitation(group_id, user_id, sender_id) {
-  return db("group_invitees").insert({ group_id, user_id, sender_id });
+  return db("group_invitees")
+    .insert({ group_id, user_id, sender_id })
+    .returning("*");
 }
 
 function deleteInvitation(group_id, user_id, sender_id) {
