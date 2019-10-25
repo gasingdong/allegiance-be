@@ -8,7 +8,20 @@ module.exports = {
 };
 
 function findByUserId(user_id) {
-  return db("group_invitees").where({ user_id });
+  return db("group_invitees as i")
+    .where({ user_id })
+    .join("users as u", "u.id", "i.sender_id")
+    .join("groups as g", "g.id", "i.group_id")
+    .select(
+      "i.user_id",
+      "i.sender_id",
+      "i.group_id",
+      "i.created_at",
+      "g.group_name",
+      "g.image",
+      "u.first_name",
+      "u.last_name"
+    );
 }
 
 function findByGroupId(group_id) {
