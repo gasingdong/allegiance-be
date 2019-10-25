@@ -5,7 +5,7 @@ exports.seed = function(knex) {
 	return knex("groups").insert([
 		{
 			group_name: "Las Vegas Raiders Fans",
-			privacy_setting: "public",
+			privacy_setting: "private",
 			location: "89103",
 			creator_id: 1,
 			image:
