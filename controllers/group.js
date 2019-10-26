@@ -208,20 +208,31 @@ router
   })
   .post(async (req, res) => {
     try {
-      const { user_id } = req.body;
+      const { email, sender_id } = req.body;
       const { id } = req.params;
-      const invitedUser = await Invitees.addInvitation(id, user_id);
-      res.status(201).json(invitedUser);
+      const emailedUser = await Users.find({ email }).first();
+
+      if (emailedUser) {
+        const user_id = emailedUser.id;
+        const invitedUser = await Invitees.addInvitation(
+          id,
+          user_id,
+          sender_id
+        );
+        res.status(201).json(invitedUser);
+      } else {
+        res.status(400).json({ message: "That is not a valid email." });
+      }
     } catch (err) {
       console.log(err);
       res.status(500).json({ err });
     }
   });
 
-router.route("/:id/invitees/:userId").delete(async (req, res) => {
+router.route("/:id/invitees/:userId/:senderId").delete(async (req, res) => {
   try {
-    const { id, userId } = req.params;
-    const deletedInvite = await Invitees.deleteInvitation(id, userId);
+    const { id, userId, senderId } = req.params;
+    const deletedInvite = await Invitees.deleteInvitation(id, userId, senderId);
     res.status(200).json(deletedInvite);
   } catch (err) {
     console.log(err);

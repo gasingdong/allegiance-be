@@ -16,7 +16,16 @@ exports.up = function(knex) {
       .inTable("groups")
       .onDelete("CASCADE")
       .onUpdate("CASCADE");
-    invitees.unique(["user_id", "group_id"]);
+
+    invitees
+      .integer("sender_id")
+      .unsigned()
+      .notNullable()
+      .references("id")
+      .inTable("users")
+      .onDelete("CASCADE")
+      .onUpdate("CASCADE");
+    invitees.unique(["user_id", "group_id", "sender_id"]);
     invitees.timestamps(true, true);
   });
 };

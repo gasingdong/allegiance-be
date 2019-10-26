@@ -7,6 +7,7 @@ const router = express.Router();
 const validation = require("../middleware/dataValidation");
 const userValidation = require("../middleware/user-middleware");
 const Notifications = require("../models/notifications");
+const Invitees = require("../models/group_invitees");
 
 const { userSchema } = require("../schemas");
 
@@ -47,6 +48,19 @@ router
       res.status(200).json({ user });
     } else {
       res.status(404).json({ message: "That user does not exist." });
+    }
+  });
+
+router
+  .route("/:id/invites")
+  .all(userValidation.validateUserId)
+  .get(async (req, res) => {
+    try {
+      const { id } = req.params;
+      const invites = await Invitees.findByUserId(id);
+      res.status(200).json(invites);
+    } catch (err) {
+      res.status(500).json({ err });
     }
   });
 
