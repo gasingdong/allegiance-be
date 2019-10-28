@@ -19,7 +19,6 @@ function findGroupById(group_id){
 }
 
 function privateInvitation(user_id, group_id) {
-    console.log('privateInvitation:', user_id)
     return db('join_private_group')
         .insert({ user_id, group_id})
         .returning('*');
