@@ -10,12 +10,14 @@ router
 .post(async (req, res) => {
 try {
     const { group_id }  = req.params;
-    const { userId } = req.body.data
-    console.log(group_id, userId)
+    const { userId } = req.body
+    console.log('group_id', group_id)
+    console.log('userId', userId)
     const users = await PrivateInvitees.privateInvitation(userId, group_id);
     res.status(200).json(users);
 } catch (err) {
     res.status(500).json({ err })
+    console.log('err:',err)
 }
 })
 
