@@ -1,6 +1,6 @@
 
 exports.up = function(knex) {
-  return knex.schema.createTable('private_group_invitees', invitees => {
+  return knex.schema.createTable('join_private_group', invitees => {
     invitees
         .integer('user_id')
         .unsigned()
@@ -21,5 +21,5 @@ exports.up = function(knex) {
 };
 
 exports.down = function(knex) {
-  return knex.schema.dropTableIfExists('private_group_invitees')
+  return knex.schema.dropTableIfExists('join_private_group')
 };

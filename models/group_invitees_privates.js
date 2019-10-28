@@ -18,9 +18,10 @@ function findGroupById(group_id){
         .select('u.email', 'u.username');
 }
 
-function privateInvitation(user_id, group_id, sender_id) {
+function privateInvitation(user_id, group_id) {
+    console.log('privateInvitation:', user_id)
     return db('join_private_group')
-        .insert({ group_id, user_id, sender_id })
+        .insert({ user_id, group_id})
         .returning('*');
 }
 

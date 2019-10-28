@@ -3,7 +3,7 @@ exports.seed = function(knex) {
   // Deletes ALL existing entries
   
       // Inserts seed entries
-      return knex('private_group_invitees').insert([
+      return knex('join_private_group').insert([
         {user_id: 1, group_id: 2}
       ]);
    };
