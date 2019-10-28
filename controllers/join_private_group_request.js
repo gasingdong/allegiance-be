@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const PrivateInvitees = require('../models/group_invitees_privates')
+const PrivateInvitees = require('../models/private_group_request')
 const validation = require('../middleware/dataValidation')
 const { groupSchema } = require("../schemas");
 const Users = require('../models/users')
@@ -11,6 +11,7 @@ router
 try {
     const { group_id }  = req.params;
     const { userId } = req.body.data
+    console.log(group_id, userId)
     const users = await PrivateInvitees.privateInvitation(userId, group_id);
     res.status(200).json(users);
 } catch (err) {

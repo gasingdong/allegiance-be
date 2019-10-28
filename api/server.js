@@ -25,7 +25,7 @@ const repliesRouter = require('../controllers/reply')
 const repliesLikesRouter = require('../controllers/reply_like')
 const feedRouter = require('../controllers/feed')
 const notificationsRouter = require('../controllers/notification')
-const privateGroupInvitesRouter = require('../controllers/group_invitees_private')
+const privateGroupInvitesRouter = require('../controllers/join_private_group_request')
 
 // Internal middleware
 const errorHandler = require('../middleware/errorHandling')
