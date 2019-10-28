@@ -39,6 +39,8 @@ async function findByUserId(user_id) {
             ...note,
             content: reply.reply_content
           });
+        } else {
+          await remove(note.id);
         }
       } else if (note.type === "like" || note.type === "reply") {
         const post = await Posts.find({ "p.id": note.type_id }).first();
@@ -47,6 +49,8 @@ async function findByUserId(user_id) {
             ...note,
             content: post.post_content
           });
+        } else {
+          await remove(note.id);
         }
       }
       return acc;
