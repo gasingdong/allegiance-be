@@ -48,14 +48,6 @@ async function findByUserId(user_id) {
             content: post.post_content
           });
         }
-      } else if (note.type === "group_invite") {
-        const group = await Groups.find({ id: note.type_id }).first();
-        if (group) {
-          acc.push({
-            ...note,
-            content: group.group_name
-          });
-        }
       }
       return acc;
     } catch (err) {
@@ -64,13 +56,39 @@ async function findByUserId(user_id) {
   }, Promise.resolve([]));
 }
 
-function addToUser(user_id, invoker_id, type_id, type) {
-  return db("notifications").insert({
-    user_id,
-    invoker_id,
-    type_id,
-    type
-  });
+async function addToUser(user_id, invoker_id, type_id, type) {
+  const [note] = await db("notifications")
+    .insert({
+      user_id,
+      invoker_id,
+      type_id,
+      type
+    })
+    .returning("*");
+
+  let newNote;
+  try {
+    if (note.type === "reply_like") {
+      const reply = await Replies.find({ "r.id": note.type_id }).first();
+      if (reply) {
+        newNote = {
+          ...note,
+          content: reply.reply_content
+        };
+      }
+    } else if (note.type === "like" || note.type === "reply") {
+      const post = await Posts.find({ "p.id": note.type_id }).first();
+      if (post) {
+        newNote = {
+          ...note,
+          content: post.post_content
+        };
+      }
+    }
+  } catch (err) {
+    console.log(err);
+  }
+  return newNote;
 }
 
 function find(id) {
