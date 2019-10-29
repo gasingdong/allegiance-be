@@ -52,6 +52,16 @@ async function findByUserId(user_id) {
         } else {
           await remove(note.id);
         }
+      } else if (note.type === 'group_request') {
+        const group = await Groups.find({ "id": note.type_id }).first();
+        if (group) {
+          acc.push({
+            ...note,
+            content: group.group_name
+          });
+        } else {
+          await remove(note.id);
+        }
       }
       return acc;
     } catch (err) {
