@@ -8,6 +8,7 @@ const validation = require("../middleware/dataValidation");
 const userValidation = require("../middleware/user-middleware");
 const Notifications = require("../models/notifications");
 const Invitees = require("../models/group_invitees");
+const Requests = require("../models/private_group_request")
 
 const { userSchema } = require("../schemas");
 
@@ -63,6 +64,19 @@ router
       res.status(500).json({ err });
     }
   });
+
+router
+  .route("/:id/group_requests")
+  .all(userValidation.validateUserId)
+  .get(async (req, res) => {
+    try {
+      const { id } = req.params;
+      const requests = await Requests.findByUserId(id);
+      res.status(200).json(requests);
+    } catch (err) {
+      res.status(500).json({ err });
+    }
+  })
 
 router
   .route("/:id/notifications")
