@@ -20,5 +20,20 @@ try {
     console.log('err:',err)
 }
 })
+router
+    .route('/group/:group_id/:userId')
+    .delete(async (req, res) => {
+        const { group_id, userId } = req.params
+        const deleteRequest = await PrivateInvitees.deleteInvitation(userId, group_id)
+        if (deleteRequest) {
+            res.status(200).json({
+                deleteRequest,
+            })
+          } else {
+            res
+              .status(404)
+              .json({ message: 'That reply-like association does not exist.' })
+          }
+})
 
 module.exports = router;

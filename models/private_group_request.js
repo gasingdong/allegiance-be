@@ -24,9 +24,9 @@ function privateInvitation(user_id, group_id) {
         .returning('*');
 }
 
-function deleteInvitation(group_id, user_id) {
+function deleteInvitation( user_id, group_id) {
     return db("join_private_group_request")
-      .where({ group_id, user_id })
+      .where({  user_id, group_id })
       .del()
       .returning("*");
   }
