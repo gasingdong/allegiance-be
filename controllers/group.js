@@ -6,6 +6,7 @@ const Groups = require("../models/groups.js");
 const GroupsAllegiances = require("../models/groups_allegiances.js");
 const GroupsUsers = require("../models/groups_users");
 const Invitees = require("../models/group_invitees");
+const Requests = require("../models/private_group_request")
 
 const router = express.Router();
 
@@ -180,14 +181,33 @@ router
         email,
         location: user_location,
         status: user_type
-      };
+      }
     });
+
+    const requestCall = await Requests.findByGroupId(id)
+
+    const reqs = requestCall.map(req => {
+      const {
+        id,
+        first_name,
+        last_name,
+        image
+      } = req;
+      return {
+        id,
+        first_name,
+        last_name,
+        image
+      }
+    })
+
     if (group && group.id) {
       // Return group, allegiance, and member information
       res.status(200).json({
         group,
         allegiances,
-        members
+        members,
+        reqs
       });
     } else {
       res.status(404).json({ message: "That group does not exist." });
