@@ -21,7 +21,7 @@ io.on("connection", socket => {
   socket.on("send notification", data => {
     data.userIds.forEach(id => {
       const socketid = clients[id];
-      console.log("send notificatioin");
+      console.log("send notification");
       io.to(socketid).emit("new notification", data);
       // if the user is online lets find his socket id,
     });

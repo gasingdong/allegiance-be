@@ -100,6 +100,7 @@ router
         type_id,
         type
       );
+      console.log('posted', postNotification);
       res.status(201).json(postNotification);
     } catch (err) {
       res.status(500).json({ err });
