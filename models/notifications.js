@@ -52,6 +52,16 @@ async function findByUserId(user_id) {
         } else {
           await remove(note.id);
         }
+      } else if (note.type === 'group_request' || note.type === 'group_accepted') {
+        const group = await Groups.find({ "id": note.type_id }).first();
+        if (group) {
+          acc.push({
+            ...note,
+            content: group.group_name
+          });
+        } else {
+          await remove(note.id);
+        }
       }
       return acc;
     } catch (err) {
@@ -86,6 +96,14 @@ async function addToUser(user_id, invoker_id, type_id, type) {
         newNote = {
           ...note,
           content: post.post_content
+        };
+      }
+    } else if (note.type === 'group_request' || note.type === 'group_accepted') {
+      const group = await Groups.find({ "id": note.type_id }).first();
+      if (group) {
+        newNote = {
+          ...note,
+          content: group.group_name
         };
       }
     }
