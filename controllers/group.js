@@ -6,6 +6,7 @@ const Groups = require("../models/groups.js");
 const GroupsAllegiances = require("../models/groups_allegiances.js");
 const GroupsUsers = require("../models/groups_users");
 const Invitees = require("../models/group_invitees");
+const Requests = require("../models/private_group_request")
 
 const router = express.Router();
 
@@ -184,14 +185,33 @@ router
         email,
         location: user_location,
         status: user_type
-      };
+      }
     });
+
+    const requestCall = await Requests.findByGroupId(id)
+
+    const reqs = requestCall.map(req => {
+      const {
+        id,
+        first_name,
+        last_name,
+        image
+      } = req;
+      return {
+        id,
+        first_name,
+        last_name,
+        image
+      }
+    })
+
     if (group && group.id) {
       // Return group, allegiance, and member information
       res.status(200).json({
         group,
         allegiances,
-        members
+        members,
+        reqs
       });
     } else {
       res.status(404).json({ message: "That group does not exist." });
@@ -212,20 +232,31 @@ router
   })
   .post(async (req, res) => {
     try {
-      const { user_id } = req.body;
+      const { email, sender_id } = req.body;
       const { id } = req.params;
-      const invitedUser = await Invitees.addInvitation(id, user_id);
-      res.status(201).json(invitedUser);
+      const emailedUser = await Users.find({ email }).first();
+
+      if (emailedUser) {
+        const user_id = emailedUser.id;
+        const invitedUser = await Invitees.addInvitation(
+          id,
+          user_id,
+          sender_id
+        );
+        res.status(201).json(invitedUser);
+      } else {
+        res.status(400).json({ message: "That is not a valid email." });
+      }
     } catch (err) {
       console.log(err);
       res.status(500).json({ err });
     }
   });
 
-router.route("/:id/invitees/:userId").delete(async (req, res) => {
+router.route("/:id/invitees/:userId/:senderId").delete(async (req, res) => {
   try {
-    const { id, userId } = req.params;
-    const deletedInvite = await Invitees.deleteInvitation(id, userId);
+    const { id, userId, senderId } = req.params;
+    const deletedInvite = await Invitees.deleteInvitation(id, userId, senderId);
     res.status(200).json(deletedInvite);
   } catch (err) {
     console.log(err);

@@ -7,6 +7,8 @@ const router = express.Router();
 const validation = require("../middleware/dataValidation");
 const userValidation = require("../middleware/user-middleware");
 const Notifications = require("../models/notifications");
+const Invitees = require("../models/group_invitees");
+const Requests = require("../models/private_group_request")
 
 const { userSchema } = require("../schemas");
 
@@ -51,6 +53,32 @@ router
   });
 
 router
+  .route("/:id/invites")
+  .all(userValidation.validateUserId)
+  .get(async (req, res) => {
+    try {
+      const { id } = req.params;
+      const invites = await Invitees.findByUserId(id);
+      res.status(200).json(invites);
+    } catch (err) {
+      res.status(500).json({ err });
+    }
+  });
+
+router
+  .route("/:id/group_requests")
+  .all(userValidation.validateUserId)
+  .get(async (req, res) => {
+    try {
+      const { id } = req.params;
+      const requests = await Requests.findByUserId(id);
+      res.status(200).json(requests);
+    } catch (err) {
+      res.status(500).json({ err });
+    }
+  })
+
+router
   .route("/:id/notifications")
   .all(userValidation.validateUserId)
   .get(async (req, res) => {
@@ -72,6 +100,7 @@ router
         type_id,
         type
       );
+      console.log('posted', postNotification);
       res.status(201).json(postNotification);
     } catch (err) {
       res.status(500).json({ err });

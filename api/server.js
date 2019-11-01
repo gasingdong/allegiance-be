@@ -25,6 +25,7 @@ const repliesRouter = require("../controllers/reply");
 const repliesLikesRouter = require("../controllers/reply_like");
 const feedRouter = require("../controllers/feed");
 const notificationsRouter = require("../controllers/notification");
+const privateGroupInvitesRouter = require("../controllers/join_private_group_request");
 
 // Internal middleware
 const errorHandler = require("../middleware/errorHandling");
@@ -43,6 +44,7 @@ server.use("/api/replies", repliesRouter);
 server.use("/api/replies_likes", repliesLikesRouter);
 server.use("/api/feed", feedRouter);
 server.use("/api/notifications", notificationsRouter);
+server.use("/api/private", privateGroupInvitesRouter);
 
 // sanity check
 server.get("/", (req, res) => {

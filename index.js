@@ -19,10 +19,20 @@ io.on("connection", socket => {
   });
 
   socket.on("send notification", data => {
-    console.log("send notification");
     data.userIds.forEach(id => {
       const socketid = clients[id];
-      io.to(socketid).emit("new notification");
+      console.log("send notification");
+      io.to(socketid).emit("new notification", data);
+      // if the user is online lets find his socket id,
+    });
+  });
+
+  socket.on("send invite", data => {
+    data.userIds.forEach(id => {
+      const socketid = clients[id];
+      console.log("send invite");
+      io.to(socketid).emit("new invite", data);
+      // if the user is online lets find his socket id,
     });
   });
 
