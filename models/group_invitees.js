@@ -4,8 +4,13 @@ module.exports = {
   findByUserId,
   findByGroupId,
   addInvitation,
-  deleteInvitation
+  deleteInvitation,
+  findByUserAndGroup
 };
+
+function findByUserAndGroup(user_id, group_id) {
+  return db("group_invitees").where({ user_id, group_id }).first();
+}
 
 function findByUserId(user_id) {
   return db("group_invitees as i")

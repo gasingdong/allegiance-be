@@ -232,20 +232,33 @@ router
   })
   .post(async (req, res) => {
     try {
-      const { email, sender_id } = req.body;
+      console.log("post invite", req.body);
+      const { username, sender_id } = req.body;
       const { id } = req.params;
-      const emailedUser = await Users.find({ email }).first();
+      const user = await Users.find({ username }).first();
 
-      if (emailedUser) {
-        const user_id = emailedUser.id;
-        const invitedUser = await Invitees.addInvitation(
-          id,
-          user_id,
-          sender_id
-        );
-        res.status(201).json(invitedUser);
+      if (user) {
+        const user_id = user.id;
+        const groupMember = await GroupsUsers.find({ user_id, group_id: id}).first();
+
+        if (!groupMember) {
+          const invitation = await Invitees.findByUserAndGroup(user_id, id);
+
+          if (!invitation) {
+            const invitedUser = await Invitees.addInvitation(
+              id,
+              user_id,
+              sender_id
+            );
+            res.status(201).json(invitedUser);
+          } else {
+            res.status(400).json({ message: 'User already has a pending invite' });
+          }
+        } else {
+          res.status(400).json({ message: "User is already a member" });
+        }
       } else {
-        res.status(400).json({ message: "That is not a valid email." });
+        res.status(400).json({ message: "Username not found" });
       }
     } catch (err) {
       console.log(err);
