@@ -86,10 +86,12 @@ router.route("/search").post(async (req, res) => {
       }).first();
       // if user and group exists, send group information
       if (user && group) {
+        console.log("group", group);
         res.status(200).json({
           group
         });
       } else {
+        console.log("else :(");
         res.status(404).json({
           message:
             "User id provided or Group id provided does not exist, please double check inputs"
