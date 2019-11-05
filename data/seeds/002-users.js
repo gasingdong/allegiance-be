@@ -17,7 +17,8 @@ exports.seed = async function(knex, Promise) {
     fakeUsers.push(createFakeUser());
   }
   fakeUsers.push({
-    email: "labsallegiance@gmail.com",
+    email: "labsallegiance@gmail.com"
+    username: "test"
   });
   await knex("users").insert(fakeUsers);
 };
