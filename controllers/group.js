@@ -5,6 +5,8 @@ const Users = require("../models/users");
 const Groups = require("../models/groups.js");
 const GroupsAllegiances = require("../models/groups_allegiances.js");
 const GroupsUsers = require("../models/groups_users");
+const Invitees = require("../models/group_invitees");
+const Requests = require("../models/private_group_request")
 
 const router = express.Router();
 
@@ -38,6 +40,7 @@ router
 
 // Endpoint to retrieve groups for search
 router.route("/search").post(async (req, res) => {
+  console.log("search got hit");
   // Branch for location searches
   if (req.body.column === "location") {
     // Use zipcodes package to search for zip codes
@@ -82,7 +85,9 @@ router.route("/search").post(async (req, res) => {
   }
   // Branch for non location searches
   else {
+    console.log("else block");
     const groups = await Groups.search(req.body);
+    console.log("did i get groups,", groups);
     // Obtain list of group ids
     const group_id = groups.map(group => group.id);
     // Obtain members of all groups retrieved
@@ -94,6 +99,7 @@ router.route("/search").post(async (req, res) => {
         members: members.filter(member => member.group_id === group.id)
       };
     });
+    console.log(groups);
     res.status(200).json({
       groupByFilter,
       members
@@ -113,7 +119,7 @@ router
     if (!userExists) {
       return res.status(404).json({ message: "User cannot be found" });
     } else {
-      // Check that group exists
+      //Check that group exists
       const groupExists = await Groups.find({ id }).first();
       if (!groupExists) {
         return res.status(404).json({ message: "That group does not exist." });
@@ -127,10 +133,10 @@ router
   })
   .delete(async (req, res) => {
     const { id } = req.params;
-    const deleted = await Groups.remove({ id });
+    const deleted = await Groups.remove({ id: Number(id) });
     if (deleted) {
       res.status(200).json({
-        message: "Group successfully deleted."
+        deleted
       });
     } else {
       res.status(404).json({ message: "That group does not exist." });
@@ -156,6 +162,7 @@ router
         sport
       };
     });
+
     // Obtain listing of all members for group
     const userCall = await GroupsUsers.find({ group_id: id });
     // Shorten names for members array
@@ -178,18 +185,98 @@ router
         email,
         location: user_location,
         status: user_type
-      };
+      }
     });
+
+    const requestCall = await Requests.findByGroupId(id)
+
+    const reqs = requestCall.map(req => {
+      const {
+        id,
+        first_name,
+        last_name,
+        image,
+        username
+      } = req;
+      return {
+        id,
+        first_name,
+        last_name,
+        image,
+        username
+      }
+    })
+
     if (group && group.id) {
       // Return group, allegiance, and member information
       res.status(200).json({
         group,
         allegiances,
-        members
+        members,
+        reqs
       });
     } else {
       res.status(404).json({ message: "That group does not exist." });
     }
   });
+
+router
+  .route("/:id/invitees")
+  .get(async (req, res) => {
+    try {
+      const { id } = req.params;
+      const users = await Invitees.findByGroupId(id);
+      res.status(200).json(users);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ err });
+    }
+  })
+  .post(async (req, res) => {
+    try {
+      console.log("post invite", req.body);
+      const { username, sender_id } = req.body;
+      const { id } = req.params;
+      const user = await Users.find({ username }).first();
+
+      if (user) {
+        const user_id = user.id;
+        const groupMember = await GroupsUsers.find({ user_id, group_id: id}).first();
+
+        if (!groupMember) {
+          const invitation = await Invitees.findByUserAndGroup(user_id, id);
+
+          if (!invitation) {
+            const invitedUser = await Invitees.addInvitation(
+              id,
+              user_id,
+              sender_id
+            );
+            res.status(201).json(invitedUser);
+          } else {
+            res.status(400).json({ message: 'User already has a pending invite' });
+          }
+        } else {
+          res.status(400).json({ message: "User is already a member" });
+        }
+      } else {
+        res.status(400).json({ message: "Username not found" });
+      }
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ err });
+    }
+  });
+
+router.route("/:id/invitees/:userId/:senderId").delete(async (req, res) => {
+  try {
+    const { id, userId, senderId } = req.params;
+    const deletedInvite = await Invitees.deleteInvitation(id, userId, senderId);
+    res.status(200).json(deletedInvite);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ err });
+  }
+});
 
 module.exports = router;

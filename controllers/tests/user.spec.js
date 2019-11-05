@@ -87,4 +87,20 @@ describe("user router", () => {
       expect(response.body.message).toBe("That user does not exist.");
     });
   });
+
+  describe("GET /api/users/:id/notifications", () => {
+    it("returns success message if successful", async () => {
+      const response = await request(server)
+        .get("/api/users/1/notifications")
+        .set({ Authorization: `Bearer ${token}`});
+      expect(response.type).toBe("application/json");
+      expect(response.status).toBe(200);
+    })
+    it("returns 404 if notifications are not found", async () => {
+      const response = await request(server)
+        .get("/api/users/10000/notifications")
+        .set({ Authorization: `Bearer ${token}` });
+      expect(response.status).toBe(404);
+    });
+  })
 });

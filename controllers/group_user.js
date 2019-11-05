@@ -69,7 +69,7 @@ router.route("/search").post(async (req, res) => {
   // check for user_id and group_id in request body
   const { user_id, group_id } = req.body;
   // if both user_id and group_id are defined in body move along this branch
-  if (user_id !== undefined && group_id !== undefined) {
+  if (user_id && group_id) {
     // find if relation between user and group entered exists, if so return find function from groups_users model
     const relationExists = await GroupsUsers.find(req.body);
     if (relationExists.length !== 0) {
@@ -78,6 +78,7 @@ router.route("/search").post(async (req, res) => {
       });
       // if relation does not already exist, check for user and group existence
     } else {
+      console.log("userid", user_id, "groupid", group_id);
       const user = await Users.find({
         id: user_id
       }).first();
@@ -86,10 +87,12 @@ router.route("/search").post(async (req, res) => {
       }).first();
       // if user and group exists, send group information
       if (user && group) {
+        console.log("group", group);
         res.status(200).json({
           group
         });
       } else {
+        console.log("else :(");
         res.status(404).json({
           message:
             "User id provided or Group id provided does not exist, please double check inputs"
