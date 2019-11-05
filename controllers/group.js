@@ -195,13 +195,15 @@ router
         id,
         first_name,
         last_name,
-        image
+        image,
+        username
       } = req;
       return {
         id,
         first_name,
         last_name,
-        image
+        image,
+        username
       }
     })
 
