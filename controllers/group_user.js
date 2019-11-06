@@ -16,13 +16,13 @@ router
     if (Object.keys(req.body).length > 0) {
       const groupUsers = await GroupsUsers.find(req.body);
       res.status(200).json({
-        groupUsers
+        groupUsers,
       });
       // if there are no filters being passed on request body, send entire listing of associations
     } else {
       const groupUsers = await GroupsUsers.find();
       res.status(200).json({
-        groupUsers
+        groupUsers,
       });
     }
   })
@@ -30,28 +30,28 @@ router
     const { user_id, group_id } = req.body;
     // Check if user exists
     const user = await Users.find({
-      id: user_id
+      id: user_id,
     }).first();
     // Check if group exists
     const group = await Groups.find({
-      id: group_id
+      id: group_id,
     }).first();
     if (user && group) {
       // if both allegiance and group exists, create relationship between the two
       const newGroupUsers = await GroupsUsers.add(req.body);
       res.status(201).json({
-        newGroupUsers
+        newGroupUsers,
       });
     } else {
       res.status(404).json({
         message:
-          "User id provided or Group id provided does not exist, please double check inputs"
+          "User id provided or Group id provided does not exist, please double check inputs",
       });
     }
   })
   // Delete by user and group IDs
   .delete(async (req, res) => {
-    const { group_id, user_id } = req.body;
+    const { group_id, user_id } = req.query;
     const deleted = await GroupsUsers.remove({ user_id, group_id });
     if (deleted) {
       res
@@ -74,28 +74,28 @@ router.route("/search").post(async (req, res) => {
     const relationExists = await GroupsUsers.find(req.body);
     if (relationExists.length !== 0) {
       res.status(200).json({
-        relationExists
+        relationExists,
       });
       // if relation does not already exist, check for user and group existence
     } else {
       console.log("userid", user_id, "groupid", group_id);
       const user = await Users.find({
-        id: user_id
+        id: user_id,
       }).first();
       const group = await Groups.find({
-        id: group_id
+        id: group_id,
       }).first();
       // if user and group exists, send group information
       if (user && group) {
         console.log("group", group);
         res.status(200).json({
-          group
+          group,
         });
       } else {
         console.log("else :(");
         res.status(404).json({
           message:
-            "User id provided or Group id provided does not exist, please double check inputs"
+            "User id provided or Group id provided does not exist, please double check inputs",
         });
       }
     }
@@ -114,11 +114,11 @@ router.route("/search/:user_id").get(async (req, res) => {
   if (groups.length > 0) {
     // if groups array is not empty, then send groups as a response
     res.status(200).json({
-      groups
+      groups,
     });
   } else {
     res.status(404).json({
-      message: "User id provided does not exist or has no groups"
+      message: "User id provided does not exist or has no groups",
     });
   }
 });
