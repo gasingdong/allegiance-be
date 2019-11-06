@@ -51,7 +51,7 @@ router
   })
   // Delete by user and group IDs
   .delete(async (req, res) => {
-    const { group_id, user_id } = req.body;
+    const { group_id, user_id } = req.query;
     const deleted = await GroupsUsers.remove({ user_id, group_id });
     if (deleted) {
       res
