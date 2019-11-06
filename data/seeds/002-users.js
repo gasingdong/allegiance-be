@@ -7,6 +7,7 @@ const createFakeUser = () => ({
   first_name: faker.name.firstName(),
   last_name: faker.name.lastName(),
   bio: faker.lorem.sentences(),
+  image: faker.image.avatar(),
 });
 exports.seed = async function(knex, Promise) {
   // Deletes ALL existing entries
@@ -18,6 +19,7 @@ exports.seed = async function(knex, Promise) {
   }
   fakeUsers.push({
     email: "labsallegiance@gmail.com",
+    username: "test",
   });
   await knex("users").insert(fakeUsers);
 };
