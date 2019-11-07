@@ -20,11 +20,6 @@ describe("group router", () => {
       expect(response.status).toBe(200);
       expect(response.body.groups.length).toBeTruthy();
     });
-    it("fails without valid authentication", async () => {
-      const response = await request(server).get("/api/groups");
-      expect(response.status).toBe(500);
-      expect(response.body).toEqual({});
-    });
   });
 
   describe("POST /api/groups", () => {
@@ -88,6 +83,16 @@ describe("group router", () => {
       expect(response.status).toBe(200);
       expect(response.body.group.group_name).toBeDefined();
     });
+
+    it("returns group requests in the data response", async () => {
+      const response = await request(server)
+        .get("/api/groups/1")
+        .set({ Authorization: `Bearer ${token}` });
+      expect(response.type).toBe("application/json");
+      expect(response.status).toBe(200);
+      expect(response.body.reqs).toBeTruthy();
+    });
+
     it("returns 404 if group not found", async () => {
       const response = await request(server)
         .get("/api/groups/10000")
@@ -105,12 +110,30 @@ describe("group router", () => {
       expect(response.type).toBe("application/json");
       expect(response.status).toBe(200);
     });
-    it("returns 404 if user not found", async () => {
+    it("returns 404 if group not found", async () => {
       const response = await request(server)
         .delete("/api/groups/10000")
         .set({ Authorization: `Bearer ${token}` });
-      expect(response.status).toBe(404);
-      expect(response.body.message).toBe("That group does not exist.");
+      //Test for more specific form of data would be better
+      expect(response.data).toBe(undefined);
     });
+  });
+
+  describe("/api/groups/:id/invitees", () => {
+    it("returns success message if successful", async () => {
+      const response = await request(server).get("/api/groups/1/invitees")
+      expect(response.type).toBe("application/json");
+      expect(response.status).toBe(200);
+    });
+    it("successfully creates invite", async () => {
+      const response = await request(server)
+        .post("/api/groups/1/invitees")
+        .send({
+          username: "test",
+          sender_id: 1
+        });
+      expect(response.type).toBe("application/json");
+      expect(response.status).toBe(201);
+    })
   });
 });

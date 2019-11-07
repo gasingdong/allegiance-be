@@ -33,6 +33,8 @@ function find(filters) {
 
 // Sets array of columns which need to use integers or timestamps
 const findColumns = ["id", "creator_id", "created_at", "updated_at"];
+// Hidden group type
+const hidden = "hidden";
 
 // added secondary "find" function that performs specific filter using ilike to fuzzy search groups
 async function search(filters) {
@@ -44,17 +46,17 @@ async function search(filters) {
       .whereIn(filters.column, filters.row);
   } else {
     if (findColumns.includes(filters.column)) {
-      console.log("if");
+      // console.log("if");
       const results = await db("groups").where(filters.column, filters.row);
-      console.log("awaited results \n", results);
+      // console.log("awaited results \n", results);
     } else {
-      console.log("else");
+      // console.log("else");
       const results = await db("groups").where(
         `${filters.column}`,
         "ilike",
         `%${filters.row}%`
       );
-      console.log("awaited results \n", results);
+      // console.log("awaited results \n", results);
       return results;
     }
   }
