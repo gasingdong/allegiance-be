@@ -20,11 +20,6 @@ describe("user router", () => {
       expect(response.status).toBe(200);
       expect(response.body.users.length).toEqual(50);
     });
-    it("fails without valid authentication", async () => {
-      const response = await request(server).get("/api/users");
-      expect(response.status).toBe(500);
-      expect(response.body).toEqual({});
-    });
   });
 
   describe("PUT /api/users/:id", () => {
