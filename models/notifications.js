@@ -8,7 +8,7 @@ module.exports = {
   findByUserId,
   addToUser,
   remove,
-  find
+  find,
 };
 
 async function findByUserId(user_id) {
@@ -37,7 +37,7 @@ async function findByUserId(user_id) {
         if (reply) {
           acc.push({
             ...note,
-            content: reply.reply_content
+            content: reply.reply_content,
           });
         } else {
           await remove(note.id);
@@ -47,17 +47,20 @@ async function findByUserId(user_id) {
         if (post) {
           acc.push({
             ...note,
-            content: post.post_content
+            content: post.post_content,
           });
         } else {
           await remove(note.id);
         }
-      } else if (note.type === 'group_request' || note.type === 'group_accepted') {
-        const group = await Groups.find({ "id": note.type_id }).first();
+      } else if (
+        note.type === "group_request" ||
+        note.type === "group_accepted"
+      ) {
+        const group = await Groups.find({ id: note.type_id }).first();
         if (group) {
           acc.push({
             ...note,
-            content: group.group_name
+            content: group.group_name,
           });
         } else {
           await remove(note.id);
@@ -76,7 +79,7 @@ async function addToUser(user_id, invoker_id, type_id, type) {
       user_id,
       invoker_id,
       type_id,
-      type
+      type,
     })
     .returning("*");
 
@@ -87,7 +90,7 @@ async function addToUser(user_id, invoker_id, type_id, type) {
       if (reply) {
         newNote = {
           ...note,
-          content: reply.reply_content
+          content: reply.reply_content,
         };
       }
     } else if (note.type === "like" || note.type === "reply") {
@@ -95,15 +98,18 @@ async function addToUser(user_id, invoker_id, type_id, type) {
       if (post) {
         newNote = {
           ...note,
-          content: post.post_content
+          content: post.post_content,
         };
       }
-    } else if (note.type === 'group_request' || note.type === 'group_accepted') {
-      const group = await Groups.find({ "id": note.type_id }).first();
+    } else if (
+      note.type === "group_request" ||
+      note.type === "group_accepted"
+    ) {
+      const group = await Groups.find({ id: note.type_id }).first();
       if (group) {
         newNote = {
           ...note,
-          content: group.group_name
+          content: group.group_name,
         };
       }
     }
