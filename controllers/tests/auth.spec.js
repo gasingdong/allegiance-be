@@ -16,7 +16,8 @@ describe("auth router", () => {
   describe("POST /api/auth", () => {
     it("adds new user if successful and user email does not exist in the database", async () => {
       const newUser = {
-        email: "a@a.com"
+        email: "a@a.com",
+        username: "aaaaaa"
       };
       const response = await request(server)
         .post("/api/auth")
@@ -28,7 +29,8 @@ describe("auth router", () => {
 
     it("returns current user if successful and user email already exists", async () => {
       const currentUser = {
-        email: "a@a.com"
+        email: "a@a.com",
+        username: "aaaaaa"
       };
       const response = await request(server)
         .post("/api/auth")
