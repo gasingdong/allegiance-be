@@ -38,6 +38,7 @@ async function findByUserId(user_id) {
           acc.push({
             ...note,
             content: reply.reply_content,
+            post_id: reply.post_id,
           });
         } else {
           await remove(note.id);
@@ -91,6 +92,7 @@ async function addToUser(user_id, invoker_id, type_id, type) {
         newNote = {
           ...note,
           content: reply.reply_content,
+          post_id: reply.post_id,
         };
       }
     } else if (note.type === "like" || note.type === "reply") {
