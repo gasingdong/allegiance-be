@@ -15,7 +15,8 @@ const namespaceHandler = (namespace, helper) => {
     helper(socket, namespace, io);
   };
 };
-
+// .of - Returns Namespace
+// custom namespaces
 const root = io.of("/");
 
 root.on("connection", namespaceHandler(root, namespaceHelper.root));

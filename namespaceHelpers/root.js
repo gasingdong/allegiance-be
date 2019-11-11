@@ -4,9 +4,9 @@ module.exports = (socket, namespace, io) => {
   console.log("New connection id: " + socket.id);
 
   socket.on("join", data => {
-    console.log("received", data);
+    // console.log("received", data);
     clients[data.id] = socket.id;
-    console.log(clients);
+    // console.log(clients);
   });
 
   socket.on("send notification", data => {
@@ -25,6 +25,17 @@ module.exports = (socket, namespace, io) => {
       io.to(socketid).emit("new invite", data);
       // if the user is online lets find his socket id,
     });
+  });
+
+  socket.on("join.groups", group_name => {
+    console.log("socket rooms ===> ", socket.rooms);
+    console.log("\n joining room ", group_name);
+    socket.join(group_name);
+  });
+
+  socket.on("event", e => {
+    console.log("getting hit", e);
+    socket.broadcast.to(e.room).emit("event", e.post_content + " says hello!");
   });
 
   socket.on("disconnect", () => {
