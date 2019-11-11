@@ -43,6 +43,11 @@ module.exports = (socket, namespace, io) => {
     socket.broadcast.to(data.room).emit("groupPost", data);
   });
 
+  socket.on("replyPost", data => {
+    console.log("replyPost", data);
+    socket.broadcast.to(data.room).emit("replyPost", data);
+  });
+
   socket.on("disconnect", () => {
     console.log("disconnected id: " + socket.id);
   });
