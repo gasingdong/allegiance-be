@@ -8,14 +8,14 @@ const validation = require("../middleware/dataValidation");
 const userValidation = require("../middleware/user-middleware");
 const Notifications = require("../models/notifications");
 const Invitees = require("../models/group_invitees");
-const Requests = require("../models/private_group_request")
+const Requests = require("../models/private_group_request");
 
 const { userSchema } = require("../schemas");
 
 router.route("/").get(async (req, res) => {
   const users = await Users.find();
   res.status(200).json({
-    users
+    users,
   });
 });
 
@@ -80,7 +80,7 @@ router
     } catch (err) {
       res.status(500).json({ err });
     }
-  })
+  });
 
 router
   .route("/:id/notifications")
@@ -104,7 +104,6 @@ router
         type_id,
         type
       );
-      console.log('posted', postNotification);
       res.status(201).json(postNotification);
     } catch (err) {
       res.status(500).json({ err });
