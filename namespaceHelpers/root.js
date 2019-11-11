@@ -35,7 +35,12 @@ module.exports = (socket, namespace, io) => {
 
   socket.on("event", e => {
     console.log("getting hit", e);
-    socket.broadcast.to(e.room).emit("event", e.post_content + " says hello!");
+    socket.broadcast.to(e.room).emit("event", e.post + " says hello!");
+  });
+
+  socket.on("groupPost", data => {
+    console.log("pageData", data);
+    socket.broadcast.to(data.room).emit("groupPost", data);
   });
 
   socket.on("disconnect", () => {
