@@ -6,7 +6,7 @@ const Groups = require("../models/groups.js");
 const GroupsAllegiances = require("../models/groups_allegiances.js");
 const GroupsUsers = require("../models/groups_users");
 const Invitees = require("../models/group_invitees");
-const Requests = require("../models/private_group_request")
+const Requests = require("../models/private_group_request");
 
 const router = express.Router();
 
@@ -24,23 +24,22 @@ router
     const { creator_id } = req.body;
     // Check creator is a valid user in database before proceeding
     const user = await Users.find({
-      id: creator_id
+      id: creator_id,
     }).first();
     if (user) {
       const newGroup = await Groups.add(req.body);
       res.status(201).json({
-        newGroup
+        newGroup,
       });
     } else {
       res.status(404).json({
-        message: "the creator of this group does not exist"
+        message: "the creator of this group does not exist",
       });
     }
   });
 
 // Endpoint to retrieve groups for search
 router.route("/search").post(async (req, res) => {
-  console.log("search got hit");
   // Branch for location searches
   if (req.body.column === "location") {
     // Use zipcodes package to search for zip codes
@@ -62,7 +61,7 @@ router.route("/search").post(async (req, res) => {
       const groupByFilter = groups.map(group => {
         return {
           ...group,
-          members: members.filter(member => member.group_id === group.id)
+          members: members.filter(member => member.group_id === group.id),
         };
       });
       // Sort results by smallest to largest distance as the crow flies
@@ -75,19 +74,17 @@ router.route("/search").post(async (req, res) => {
       // Return response with groups with loaded group as well as members lists
       res.status(200).json({
         groupByFilter,
-        members
+        members,
       });
     } else {
       res.status(400).json({
-        error: `Error during ${req.method} at ${req.originalUrl}: Please provide valid zip code`
+        error: `Error during ${req.method} at ${req.originalUrl}: Please provide valid zip code`,
       });
     }
   }
   // Branch for non location searches
   else {
-    console.log("else block");
     const groups = await Groups.search(req.body);
-    console.log("did i get groups,", groups);
     // Obtain list of group ids
     const group_id = groups.map(group => group.id);
     // Obtain members of all groups retrieved
@@ -96,13 +93,12 @@ router.route("/search").post(async (req, res) => {
     const groupByFilter = groups.map(group => {
       return {
         ...group,
-        members: members.filter(member => member.group_id === group.id)
+        members: members.filter(member => member.group_id === group.id),
       };
     });
-    console.log(groups);
     res.status(200).json({
       groupByFilter,
-      members
+      members,
     });
   }
 });
@@ -114,7 +110,7 @@ router
     const changes = req.body;
     // Check that group creator exists
     const userExists = await Users.find({
-      id: req.body.creator_id
+      id: req.body.creator_id,
     }).first();
     if (!userExists) {
       return res.status(404).json({ message: "User cannot be found" });
@@ -126,7 +122,7 @@ router
       } else {
         const updated = await Groups.update({ id }, changes);
         res.status(200).json({
-          updated
+          updated,
         });
       }
     }
@@ -136,7 +132,7 @@ router
     const deleted = await Groups.remove({ id: Number(id) });
     if (deleted) {
       res.status(200).json({
-        deleted
+        deleted,
       });
     } else {
       res.status(404).json({ message: "That group does not exist." });
@@ -153,13 +149,13 @@ router
         allegiance_id,
         allegiance_name,
         allegiance_image,
-        sport
+        sport,
       } = allegiance;
       return {
         id: allegiance_id,
         name: allegiance_name,
         image: allegiance_image,
-        sport
+        sport,
       };
     });
 
@@ -175,7 +171,7 @@ router
         email,
         user_location,
         user_image,
-        user_type
+        user_type,
       } = member;
       return {
         id: user_id,
@@ -184,28 +180,22 @@ router
         username,
         email,
         location: user_location,
-        status: user_type
-      }
+        status: user_type,
+      };
     });
 
-    const requestCall = await Requests.findByGroupId(id)
+    const requestCall = await Requests.findByGroupId(id);
 
     const reqs = requestCall.map(req => {
-      const {
-        id,
-        first_name,
-        last_name,
-        image,
-        username
-      } = req;
+      const { id, first_name, last_name, image, username } = req;
       return {
         id,
         first_name,
         last_name,
         image,
-        username
-      }
-    })
+        username,
+      };
+    });
 
     if (group && group.id) {
       // Return group, allegiance, and member information
@@ -213,7 +203,7 @@ router
         group,
         allegiances,
         members,
-        reqs
+        reqs,
       });
     } else {
       res.status(404).json({ message: "That group does not exist." });
@@ -234,14 +224,16 @@ router
   })
   .post(async (req, res) => {
     try {
-      console.log("post invite", req.body);
       const { username, sender_id } = req.body;
       const { id } = req.params;
       const user = await Users.find({ username }).first();
 
       if (user) {
         const user_id = user.id;
-        const groupMember = await GroupsUsers.find({ user_id, group_id: id}).first();
+        const groupMember = await GroupsUsers.find({
+          user_id,
+          group_id: id,
+        }).first();
 
         if (!groupMember) {
           const invitation = await Invitees.findByUserAndGroup(user_id, id);
@@ -254,7 +246,9 @@ router
             );
             res.status(201).json(invitedUser);
           } else {
-            res.status(400).json({ message: 'User already has a pending invite' });
+            res
+              .status(400)
+              .json({ message: "User already has a pending invite" });
           }
         } else {
           res.status(400).json({ message: "User is already a member" });
