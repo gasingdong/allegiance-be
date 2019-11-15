@@ -75,14 +75,45 @@ router.route("/profile").post(async (req, res) => {
     let basicAllegianceInfo = [];
     if (userGroups) {
       // If user is a member of groups, map group info to conform names to front end component structure
-      basicGroupInfo = userGroups.map(group => {
-        return {
-          name: group.group_name,
-          image: group.group_image,
-          id: group.group_id,
-          user_type: group.user_type,
-        };
-      });
+
+      // basicGroupInfo = userGroups
+      //   .filter(group => group.privacy_setting !== "hidden")
+      //   .map(group => {
+      //     return {
+      //       ...group,
+      //       name: group.group_name,
+      //       image: group.group_image,
+      //       id: group.group_id,
+      //       user_type: group.user_type,
+      //     };
+      //   });
+
+      basicGroupInfo = userGroups.reduce((acc, currentGroup) => {
+        if (currentGroup.privacy_setting !== "hidden") {
+          acc.push({
+            ...currentGroup,
+            name: currentGroup.group_name,
+            image: currentGroup.group_image,
+            id: currentGroup.group_id,
+            user_type: currentGroup.user_type,
+          });
+          return acc;
+        } else {
+          return acc;
+        }
+      }, []);
+
+      // basicGroupInfo = userGroups.filter(group => {
+      //   if (group.privacy_setting !== "hidden") {
+      //     return {
+      //       ...group,
+      //       name: group.group_name,
+      //       image: group.group_image,
+      //       id: group.group_id,
+      //       user_type: group.user_type,
+      //     };
+      //   }
+      // });
     }
     if (userAllegiances) {
       // If user is a member of allegiances, map allegiance info to conform names to front end component structure
