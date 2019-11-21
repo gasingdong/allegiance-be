@@ -63,6 +63,12 @@ All endpoints have been documented using [Postman](https://www.getpostman.com/).
 
 ## Maintainers
 
+### Labs 17
+| ![Luis Martinez](https://github.com/luiscmartinez.png) | ![Sean Doyle](https://github.com/sdoylelambda.png) | ![Connor Claxton](https://github.com/czclaxton.png) | ![Zachary Lasky](https://github.com/ZacharyLasky.png) | ![Brandon Gasing Dong](https://github.com/gasingdong.png)  |
+| --------------------------------------------------------- | ----------------------------------------------------------- | ---------------------------------------------------- | ------------------------------------------ | -------------------------------------------------------- |
+| [@luiscmartinez](https://github.com/luiscmartinez) | [@sdoylelambda](https://github.com/sdoylelambda) | [@czclaxton](https://github.com/czclaxton) | [@ZacharyLasky](https://github.com/ZacharyLasky)   | [@gasingdong](https://github.com/gasingdong) |
+
+### Labs 15
 | ![Jarred Stanford](https://github.com/JarredStanford.png) | ![Derek Schwantner](https://github.com/DerekSchwantner.png) | ![Adam McKenney](https://github.com/DaftBeowulf.png) | ![Ang Xu](https://github.com/AngXuDev.png) | ![Dan O'Neill](https://github.com/danpatrickoneill.png)  |
 | --------------------------------------------------------- | ----------------------------------------------------------- | ---------------------------------------------------- | ------------------------------------------ | -------------------------------------------------------- |
 | [@JarredStanford](https://github.com/JarredStanford)      | [@DerekSchwantner](https://github.com/DerekSchwantner)      | [@DaftBeowulf](https://github.com/DaftBeowulf)       | [@AngXuDev](https://github.com/AngXuDev)   | [@danpatrickoneill](https://github.com/danpatrickoneill) |
