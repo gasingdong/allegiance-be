@@ -90,7 +90,7 @@ describe("group router", () => {
         .set({ Authorization: `Bearer ${token}` });
       expect(response.type).toBe("application/json");
       expect(response.status).toBe(200);
-      expect(response.body.reqs).toBeTruthy();
+      return expect(response.body.reqs).toBeTruthy();
     });
 
     it("returns 404 if group not found", async () => {
