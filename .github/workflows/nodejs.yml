@@ -3,24 +3,52 @@ name: Node CI
 on: [push]
 
 jobs:
-  build:
+
+  container-job:
 
     runs-on: ubuntu-latest
 
+    container: node:10.18-jessie
+
     strategy:
       matrix:
-        node-version: [8.x, 10.x, 12.x]
+        node-version: [ 8.x, 10.x, 12.x ]
+
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - name: npm install, build, and test
-      run: |
-        npm install
-        npm run build --if-present
-        npm test
-      env:
-        CI: true
+      - name: Check out repository code
+        uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Connect to PostgreSQL
+        # Runs a script that creates a PostgreSQL client and creates a database
+        run: node pgclient.js
+        env:
+          POSTGRES_HOST: postgres
+          POSTGRES_PORT: 5432
+
+      - name: Build and test
+          run: |
+            npm install
+            npm run build --if-present
+            npm test
+          env:
+            CI: true
