@@ -21,9 +21,6 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-        ports:
-          # Maps tcp port 5432 on service container to the host
-          - 5432:5432
 
     steps:
       - name: Check out repository code
@@ -44,6 +41,4 @@ jobs:
         env:
           CI: true
           AUTH0_TEST_TOKEN: ${{ secrets.AUTH0_TEST_TOKEN }}
-          DB_TEST: postgres
-          DB_TEST_USER: postgres
-          DB_TEST_PASSWORD: postgres
+          DB_TEST_URL: postgres://postgres:postgres@postgres:5432/postgres

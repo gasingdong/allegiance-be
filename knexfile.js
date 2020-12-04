@@ -24,7 +24,7 @@ module.exports = {
 
   testing: {
     client: "postgresql",
-    connection: {
+    connection: process.env.DB_TEST_URL || {
       database: process.env.DB_TEST,
       user: process.env.DB_TEST_USER,
       password: process.env.DB_TEST_PASSWORD
