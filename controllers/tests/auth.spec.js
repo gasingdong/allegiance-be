@@ -9,7 +9,12 @@ describe("auth router", () => {
     return db.seed.run();
   });
 
-  it("db environment set to testing", () => {
+  afterAll(async (done) => {
+    await db.destroy();
+    done();
+  });
+
+  it("db environment set to testing", async () => {
     expect(process.env.DB_ENV).toBe("testing");
   });
 

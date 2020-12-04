@@ -11,6 +11,11 @@ describe("group router", () => {
     return db.seed.run();
   });
 
+  afterAll(async (done) => {
+    await db.destroy();
+    done();
+  });
+
   describe("GET /api/groups", () => {
     it("returns the database groups if successful", async () => {
       const response = await request(server)

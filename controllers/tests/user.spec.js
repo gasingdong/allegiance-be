@@ -11,6 +11,11 @@ describe("user router", () => {
     return db.seed.run();
   });
 
+  afterAll(async (done) => {
+    await db.destroy();
+    done();
+  });
+
   describe("GET /api/users", () => {
     it("returns the database users if successful", async () => {
       const response = await request(server)
