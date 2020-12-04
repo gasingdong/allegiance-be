@@ -13,7 +13,6 @@ router.route("/").post(async (req, res) => {
     });
   }
   // Check if email of user exists to decide whether to create new user
-  console.log();
   const currentUser = await Users.find({
     email: req.body.email,
   }).first();

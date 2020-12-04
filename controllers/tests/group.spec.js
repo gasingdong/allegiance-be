@@ -11,6 +11,11 @@ describe("group router", () => {
     return db.seed.run();
   });
 
+  afterAll(async (done) => {
+    await db.destroy();
+    done();
+  });
+
   describe("GET /api/groups", () => {
     it("returns the database groups if successful", async () => {
       const response = await request(server)
@@ -18,7 +23,7 @@ describe("group router", () => {
         .set({ Authorization: `Bearer ${token}` });
       expect(response.type).toBe("application/json");
       expect(response.status).toBe(200);
-      return expect(response.body.groups.length).toBeTruthy();
+      expect(response.body.groups.length).toBeTruthy();
     });
   });
 
@@ -36,14 +41,14 @@ describe("group router", () => {
         .set({ Authorization: `Bearer ${token}` });
       expect(response.type).toBe("application/json");
       expect(response.status).toBe(201);
-      return expect(response.body.newGroup.id).toBeDefined();
+      expect(response.body.newGroup.id).toBeDefined();
     });
     it("returns 400 status if required fields are not submitted", async () => {
       const response = await request(server)
         .post("/api/groups")
         .send({ ...newGroup, group_name: null })
         .set({ Authorization: `Bearer ${token}` });
-      return expect(response.status).toBe(400);
+      expect(response.status).toBe(400);
     });
   });
 
@@ -60,7 +65,7 @@ describe("group router", () => {
         .send(changes)
         .set({ Authorization: `Bearer ${token}` });
       expect(response.status).toBe(200);
-      return expect(response.body.updated.group_name).toBe("Yanks in Boston");
+      expect(response.body.updated.group_name).toBe("Yanks in Boston");
     });
 
     it("returns 404 if group not found", async () => {
@@ -69,7 +74,7 @@ describe("group router", () => {
         .send(changes)
         .set({ Authorization: `Bearer ${token}` });
       expect(response.status).toBe(404);
-      return expect(response.body.message).toBe("That group does not exist.");
+      expect(response.body.message).toBe("That group does not exist.");
     });
   });
 
@@ -81,7 +86,7 @@ describe("group router", () => {
       expect(response.type).toBe("application/json");
 
       expect(response.status).toBe(200);
-      return expect(response.body.group.group_name).toBeDefined();
+      expect(response.body.group.group_name).toBeDefined();
     });
 
     it("returns group requests in the data response", async () => {
@@ -90,7 +95,7 @@ describe("group router", () => {
         .set({ Authorization: `Bearer ${token}` });
       expect(response.type).toBe("application/json");
       expect(response.status).toBe(200);
-      return expect(response.body.reqs).toBeTruthy();
+      expect(response.body.reqs).toBeTruthy();
     });
 
     it("returns 404 if group not found", async () => {
@@ -98,7 +103,7 @@ describe("group router", () => {
         .get("/api/groups/10000")
         .set({ Authorization: `Bearer ${token}` });
       expect(response.status).toBe(404);
-      return expect(response.body.message).toBe("That group does not exist.");
+      expect(response.body.message).toBe("That group does not exist.");
     });
   });
 

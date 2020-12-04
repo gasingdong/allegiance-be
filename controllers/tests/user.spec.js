@@ -11,6 +11,11 @@ describe("user router", () => {
     return db.seed.run();
   });
 
+  afterAll(async (done) => {
+    await db.destroy();
+    done();
+  });
+
   describe("GET /api/users", () => {
     it("returns the database users if successful", async () => {
       const response = await request(server)
@@ -18,7 +23,7 @@ describe("user router", () => {
         .set({ Authorization: `Bearer ${token}` });
       expect(response.type).toBe("application/json");
       expect(response.status).toBe(200);
-      return expect(response.body.users.length).toEqual(50);
+      expect(response.body.users.length).toEqual(50);
     });
   });
 
@@ -34,7 +39,7 @@ describe("user router", () => {
         .send(changes)
         .set({ Authorization: `Bearer ${token}` });
       expect(response.status).toBe(200);
-      return expect(response.body.updated.username).toBe("LesterTheTester");
+      expect(response.body.updated.username).toBe("LesterTheTester");
     });
 
     it("returns 404 if user not found", async () => {
@@ -43,7 +48,7 @@ describe("user router", () => {
         .send(changes)
         .set({ Authorization: `Bearer ${token}` });
       expect(response.status).toBe(404);
-      return expect(response.body.message).toBe("That user does not exist.");
+      expect(response.body.message).toBe("That user does not exist.");
     });
   });
 
@@ -55,14 +60,14 @@ describe("user router", () => {
       expect(response.type).toBe("application/json");
 
       expect(response.status).toBe(200);
-      return expect(response.body.user.username).toBeDefined();
+      expect(response.body.user.username).toBeDefined();
     });
     it("returns 404 if user not found", async () => {
       const response = await request(server)
         .get("/api/users/10000")
         .set({ Authorization: `Bearer ${token}` });
       expect(response.status).toBe(404);
-      return expect(response.body.message).toBe("That user does not exist.");
+      expect(response.body.message).toBe("That user does not exist.");
     });
   });
 
@@ -72,14 +77,14 @@ describe("user router", () => {
         .delete("/api/users/1")
         .set({ Authorization: `Bearer ${token}` });
       expect(response.type).toBe("application/json");
-      return expect(response.status).toBe(200);
+      expect(response.status).toBe(200);
     });
     it("returns 404 if user not found", async () => {
       const response = await request(server)
         .delete("/api/users/10000")
         .set({ Authorization: `Bearer ${token}` });
       expect(response.status).toBe(404);
-      return expect(response.body.message).toBe("That user does not exist.");
+      expect(response.body.message).toBe("That user does not exist.");
     });
   });
 
@@ -89,13 +94,13 @@ describe("user router", () => {
         .get("/api/users/1/notifications")
         .set({ Authorization: `Bearer ${token}`});
       expect(response.type).toBe("application/json");
-      return expect(response.status).toBe(200);
+      expect(response.status).toBe(200);
     })
     it("returns 404 if notifications are not found", async () => {
       const response = await request(server)
         .get("/api/users/10000/notifications")
         .set({ Authorization: `Bearer ${token}` });
-      return expect(response.status).toBe(404);
+      expect(response.status).toBe(404);
     });
   })
 });
