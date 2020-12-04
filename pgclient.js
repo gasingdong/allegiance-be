@@ -8,11 +8,3 @@ const pgclient = new Client({
 });
 
 pgclient.connect();
-
-const database = 'CREATE DATABASE allegiance_test'
-
-pgclient.query(database, (err) => {
-  if (err) {
-    throw err
-  }
-});
