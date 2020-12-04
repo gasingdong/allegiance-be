@@ -10,7 +10,7 @@ describe("auth router", () => {
   });
 
   it("db environment set to testing", () => {
-    expect(process.env.DB_ENV).toBe("testing");
+    return expect(process.env.DB_ENV).toBe("testing");
   });
 
   describe("POST /api/auth", () => {
@@ -24,7 +24,7 @@ describe("auth router", () => {
         .send(newUser);
       expect(response.type).toBe("application/json");
       expect(response.status).toBe(201);
-      expect(response.body.userInfo.newUser).toBeTruthy();
+      return expect(response.body.userInfo.newUser).toBeTruthy();
     });
 
     it("returns current user if successful and user email already exists", async () => {
@@ -37,7 +37,7 @@ describe("auth router", () => {
         .send(currentUser);
       expect(response.type).toBe("application/json");
       expect(response.status).toBe(201);
-      expect(response.body.userInfo.newUser).toBeTruthy();
+      return expect(response.body.userInfo.newUser).toBeTruthy();
     });
 
     it("returns 400 error if email is not defined", async () => {
@@ -48,7 +48,7 @@ describe("auth router", () => {
         .post("/api/auth")
         .send(error);
       expect(response.type).toBe("application/json");
-      expect(response.status).toBe(400);
+      return expect(response.status).toBe(400);
     });
   });
 });

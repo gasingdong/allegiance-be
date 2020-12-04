@@ -18,7 +18,7 @@ describe("group router", () => {
         .set({ Authorization: `Bearer ${token}` });
       expect(response.type).toBe("application/json");
       expect(response.status).toBe(200);
-      expect(response.body.groups.length).toBeTruthy();
+      return expect(response.body.groups.length).toBeTruthy();
     });
   });
 
@@ -36,14 +36,14 @@ describe("group router", () => {
         .set({ Authorization: `Bearer ${token}` });
       expect(response.type).toBe("application/json");
       expect(response.status).toBe(201);
-      expect(response.body.newGroup.id).toBeDefined();
+      return expect(response.body.newGroup.id).toBeDefined();
     });
     it("returns 400 status if required fields are not submitted", async () => {
       const response = await request(server)
         .post("/api/groups")
         .send({ ...newGroup, group_name: null })
         .set({ Authorization: `Bearer ${token}` });
-      expect(response.status).toBe(400);
+      return expect(response.status).toBe(400);
     });
   });
 
@@ -60,7 +60,7 @@ describe("group router", () => {
         .send(changes)
         .set({ Authorization: `Bearer ${token}` });
       expect(response.status).toBe(200);
-      expect(response.body.updated.group_name).toBe("Yanks in Boston");
+      return expect(response.body.updated.group_name).toBe("Yanks in Boston");
     });
 
     it("returns 404 if group not found", async () => {
@@ -69,7 +69,7 @@ describe("group router", () => {
         .send(changes)
         .set({ Authorization: `Bearer ${token}` });
       expect(response.status).toBe(404);
-      expect(response.body.message).toBe("That group does not exist.");
+      return expect(response.body.message).toBe("That group does not exist.");
     });
   });
 
@@ -81,7 +81,7 @@ describe("group router", () => {
       expect(response.type).toBe("application/json");
 
       expect(response.status).toBe(200);
-      expect(response.body.group.group_name).toBeDefined();
+      return expect(response.body.group.group_name).toBeDefined();
     });
 
     it("returns group requests in the data response", async () => {
@@ -98,7 +98,7 @@ describe("group router", () => {
         .get("/api/groups/10000")
         .set({ Authorization: `Bearer ${token}` });
       expect(response.status).toBe(404);
-      expect(response.body.message).toBe("That group does not exist.");
+      return expect(response.body.message).toBe("That group does not exist.");
     });
   });
 
